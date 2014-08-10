@@ -2,6 +2,7 @@ var express = require('express');
 var vincenty = require('node-vincenty');
 var csv = require('csv');
 var fs = require('fs');
+var request = require('superagent');
 
 var app = express();
 // examples
@@ -11,6 +12,9 @@ clientLng = 153.040116;
 var nearestData = {
     distance: 99999999999999999999
 }
+
+var openAusAPIKey = process.env.API;
+
 
 function latLngToPostcode(lat, lng, callback) {
     fs.readFile('./postcodeLatLng.csv', function(err, data) {
@@ -35,15 +39,18 @@ function latLngToPostcode(lat, lng, callback) {
 
 
         }
-        callback(nearestData);
+        callback(nearestData.postcode);
     });
 }
 
 app.get('/', function(req, res) {
-    res.send('hello  world' + req.query.lat + req.query.lng);
 
     latLngToPostcode(req.query.lat, req.query.lng, function(postcode) {
         console.log(postcode);
+        request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
+            res.send(response.text);
+        });
+
     });
 
 

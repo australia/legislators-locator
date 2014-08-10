@@ -1,17 +1,18 @@
 {
-    "name": "iPtoPostCode",
-    "version": "0.0.0",
-    "description": "",
-    "main": "web.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "csv": "^0.4.0",
-        "express": "^4.8.2",
-        "geoip-lite": "^1.1.3",
-        "node-vincenty": "0.0.6"
-    }
+  "name": "legislators-locator",
+  "version": "0.0.0",
+  "description": "",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^0.4.0",
+    "express": "^4.8.2",
+    "geoip-lite": "^1.1.3",
+    "node-vincenty": "0.0.6",
+    "superagent": "^0.18.2"
+  }
 }
