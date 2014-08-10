@@ -1,14 +1,8 @@
-var geoip = require('geoip-lite');
 var vincenty = require('node-vincenty');
 var csv = require('csv');
 var fs = require('fs');
 
-var ip = "203.206.132.243";
-var geo = geoip.lookup(ip);
-
-var clientLat = parseFloat(geo.ll[0]);
-var clientLng = parseFloat(geo.ll[1]);
-
+// examples
 clientLat = -27.530157;
 clientLng = 153.040116;
 
