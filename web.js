@@ -49,11 +49,23 @@ function getRepresentatives(postcode, callback) {
     request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
         var repsObj = {};
 
+        if (JSON.parse(response.text).error === "Invalid postcode" || JSON.parse(response.text).error === "Unknown postcode") {
+            callback(response.text);
+            return;
+        }
+
         try {
-            var legislators = JSON.parse(response.text)
+            var legislators = JSON.parse(response.text);
         } catch (e) {
             callback({
-                nothing: "nothing"
+                errror: e
+            });
+            return;
+        }
+
+        if (Object.prototype.toString.call(legislators) !== '[object Array]') {
+            callback({
+                errror: "no data returned."
             });
             return;
         }
