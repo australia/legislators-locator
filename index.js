@@ -1,7 +1,9 @@
+var express = require('express');
 var vincenty = require('node-vincenty');
 var csv = require('csv');
 var fs = require('fs');
 
+var app = express();
 // examples
 clientLat = -27.530157;
 clientLng = 153.040116;
@@ -34,4 +36,13 @@ fs.readFile('./postcodeLatLng.csv', function(err, data) {
 
     }
     console.log(nearestData);
+});
+
+app.get('/', function(req, res) {
+    res.send('hello  world');
+});
+
+var port = Number(process.env.PORT || 5000);
+app.listen(port, function() {
+    console.log('Listening on ' + port);
 });
