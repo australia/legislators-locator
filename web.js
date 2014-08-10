@@ -50,7 +50,7 @@ function getRepresentatives(postcode, callback) {
         var repsObj = {};
 
         try {
-            legislators = JSON.parse(response.text)
+            var legislators = JSON.parse(response.text)
         } catch (e) {
             callback({
                 nothing: "nothing"
