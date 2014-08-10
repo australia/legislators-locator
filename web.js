@@ -88,7 +88,7 @@ app.get('/', function(req, res) {
         getRepresentatives(req.query.postcode, function(repsObj) {
             res.jsonp(repsObj);
         });
-    } else {
+    } else if (req.query.lat && req.query.lng) {
         latLngToPostcode(parseFloat(req.query.lat), parseFloat(req.query.lng), function(postcode) {
             getRepresentatives(postcode, function(repsObj) {
                 res.jsonp(repsObj);
