@@ -6,6 +6,8 @@ var request = require('superagent');
 
 var app = express();
 
+var cachedLegislators = {};
+
 var nearestData = {
     distance: 99999999999999999999
 }
@@ -37,6 +39,12 @@ function latLngToPostcode(clientLat, clientLng, callback) {
 }
 
 function getRepresentatives(postcode, callback) {
+
+    if (postcode in cachedLegislators) {
+        callback(cachedLegislators[postcode]);
+        return;
+    }
+
     request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
         var repsObj = {};
         JSON.parse(response.text).forEach(function(rep) {
@@ -58,6 +66,8 @@ function getRepresentatives(postcode, callback) {
                 image: rep.image
             }
         });
+        cachedLegislators[postcode] = repsObj;
+
         callback(repsObj);
     });
 }
