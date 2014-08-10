@@ -15,10 +15,10 @@ var nearestData = {
 var openAusAPIKey = process.env.API;
 
 function latLngToPostcode(clientLat, clientLng, callback) {
-    fs.readFile('./postcodeLatLng.json', function(err, data) {
+    fs.readFile('./postcodeLatLng.json', function(err, array) {
         if (err) throw err;
 
-        JSON.parse(data).forEach(function(obj) {
+        JSON.parse(array).forEach(function(obj) {
 
             vincenty.distVincenty(clientLat, clientLng, obj.lat, obj.lng, function(distance) {
                 if (nearestData.distance > distance) {
@@ -34,6 +34,7 @@ function latLngToPostcode(clientLat, clientLng, callback) {
 }
 
 function getLegislators(postcode, type, callback) {
+    var repsObj = {};
 
     if (postcode in cachedLegislators) {
         console.log('using cached legislator data...');
@@ -42,7 +43,6 @@ function getLegislators(postcode, type, callback) {
     }
 
     request.get("http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
-        var repsObj = {};
 
         if (JSON.parse(response.text).error === "Invalid postcode" || JSON.parse(response.text).error === "Unknown postcode") {
             callback(response.text);
@@ -64,6 +64,12 @@ function getLegislators(postcode, type, callback) {
             });
             return;
         }
+
+        // if (legislators.length < 3){
+        //     getLegislators(postcode, 'getSenators', function(senatorsObj){
+
+        //     }};
+        // }
 
         legislators.forEach(function(rep) {
             repsObj[rep.member_id] = {
@@ -93,12 +99,12 @@ function getLegislators(postcode, type, callback) {
 
 app.get('/', function(req, res) {
     if (req.query.postcode) {
-        getLegislators(req.query.postcode, "getRepresentatives", function(repsObj) {
+        getLegislators(req.query.postcode, 'getRepresentatives', function(repsObj) {
             res.jsonp(repsObj);
         });
     } else if (req.query.lat && req.query.lng) {
         latLngToPostcode(parseFloat(req.query.lat), parseFloat(req.query.lng), function(postcode) {
-            getLegislators(postcode, "getRepresentatives", function(repsObj) {
+            getLegislators(postcode, 'getRepresentatives', function(repsObj) {
                 res.jsonp(repsObj);
             });
         });
@@ -111,3 +117,12 @@ app.listen(port, function() {
 });
 
 // todo: convert csv into json
+
+// lat lng is in aus else
+
+// if outside aus use our postcode
+
+
+function isInAustralia(postcode, lat, lng) {
+
+}
