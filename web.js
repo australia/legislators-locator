@@ -40,11 +40,11 @@ function latLngToPostcode(clientLat, clientLng, callback) {
 
 function getRepresentatives(postcode, callback) {
 
-    // if (postcode in cachedLegislators) {
-    //     console.log('using cached legislator data');
-    //     callback(cachedLegislators[postcode]);
-    //     return;
-    // }
+    if (postcode in cachedLegislators) {
+        console.log('using cached legislator data');
+        callback(cachedLegislators[postcode]);
+        return;
+    }
 
     request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
         var repsObj = {};
@@ -67,7 +67,7 @@ function getRepresentatives(postcode, callback) {
                 image: rep.image
             }
         });
-        // cachedLegislators[postcode] = repsObj;
+        cachedLegislators[postcode] = repsObj;
 
         callback(repsObj);
     });
