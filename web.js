@@ -70,16 +70,9 @@ app.get('/', function(req, res) {
                     image: rep.image
                 }
             });
-
-            res.send(repsObj);
+            res.jsonp(repsObj);
         });
-
     });
-
-
-
-
-
 });
 
 var port = Number(process.env.PORT || 5000);
