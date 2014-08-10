@@ -15,25 +15,20 @@ var nearestData = {
 var openAusAPIKey = process.env.API;
 
 function latLngToPostcode(clientLat, clientLng, callback) {
-    fs.readFile('./postcodeLatLng.csv', function(err, data) {
+    fs.readFile('./postcodeLatLng.json', function(err, data) {
         if (err) throw err;
-        var rows = data.toString().split("\n");
-        for (i in rows) {
 
-            var cells = rows[i].split(",");
-            var postcode = cells[0];
-            var lat = cells[5] && parseFloat(cells[5].replace("\"", ""));
-            var lng = cells[6] && parseFloat(cells[6].replace("\"", ""));
+        JSON.parse(data).forEach(function(obj) {
 
-            vincenty.distVincenty(clientLat, clientLng, lat, lng, function(distance) {
+            vincenty.distVincenty(clientLat, clientLng, obj.lat, obj.lng, function(distance) {
                 if (nearestData.distance > distance) {
                     nearestData = {
-                        postcode: postcode,
+                        postcode: obj.postcode,
                         distance: distance
                     };
                 }
             });
-        }
+        });
         callback(nearestData.postcode);
     });
 }
