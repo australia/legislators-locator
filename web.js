@@ -36,36 +36,44 @@ function latLngToPostcode(clientLat, clientLng, callback) {
     });
 }
 
+function getRepresentatives(postcode, callback) {
+    request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
+        var repsObj = {};
+        JSON.parse(response.text).forEach(function(rep) {
+            repsObj[rep.member_id] = {
+                house: rep.house,
+                first_name: rep.first_name,
+                last_name: rep.last_name,
+                constituency: rep.constituency,
+                party: rep.party,
+                entered_house: rep.entered_house,
+                left_house: rep.left_house,
+                entered_reason: rep.entered_reason,
+                left_reason: rep.left_reason,
+                person_id: rep.person_id,
+                title: rep.title,
+                lastupdate: rep.lastupdate,
+                full_name: rep.full_name,
+                name: rep.name,
+                image: rep.image
+            }
+        });
+        callback(repsObj);
+    });
+}
+
 app.get('/', function(req, res) {
-
-    latLngToPostcode(parseFloat(req.query.lat), parseFloat(req.query.lng), function(postcode) {
-        console.log(postcode);
-        request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
-
-            var repsObj = {};
-
-            JSON.parse(response.text).forEach(function(rep) {
-                repsObj[rep.member_id] = {
-                    house: rep.house,
-                    first_name: rep.first_name,
-                    last_name: rep.last_name,
-                    constituency: rep.constituency,
-                    party: rep.party,
-                    entered_house: rep.entered_house,
-                    left_house: rep.left_house,
-                    entered_reason: rep.entered_reason,
-                    left_reason: rep.left_reason,
-                    person_id: rep.person_id,
-                    title: rep.title,
-                    lastupdate: rep.lastupdate,
-                    full_name: rep.full_name,
-                    name: rep.name,
-                    image: rep.image
-                }
-            });
+    if (req.query.postcode) {
+        getRepresentatives(req.query.postcode, function(repsObj) {
             res.jsonp(repsObj);
         });
-    });
+    } else {
+        latLngToPostcode(parseFloat(req.query.lat), parseFloat(req.query.lng), function(postcode) {
+            getRepresentatives(postcode, function(repsObj) {
+                res.jsonp(repsObj);
+            });
+        });
+    }
 });
 
 var port = Number(process.env.PORT || 5000);
