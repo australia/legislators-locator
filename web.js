@@ -10,7 +10,7 @@ var cachedLegislators = {};
 
 var nearestData = {
     distance: 99999999999999999999
-}
+};
 
 var openAusAPIKey = process.env.API;
 
@@ -33,7 +33,7 @@ function latLngToPostcode(clientLat, clientLng, callback) {
     });
 }
 
-function getRepresentatives(postcode, callback) {
+function getLegislators(postcode, type, callback) {
 
     if (postcode in cachedLegislators) {
         console.log('using cached legislator data...');
@@ -41,7 +41,7 @@ function getRepresentatives(postcode, callback) {
         return;
     }
 
-    request.get("http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
+    request.get("http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
         var repsObj = {};
 
         if (JSON.parse(response.text).error === "Invalid postcode" || JSON.parse(response.text).error === "Unknown postcode") {
@@ -93,12 +93,12 @@ function getRepresentatives(postcode, callback) {
 
 app.get('/', function(req, res) {
     if (req.query.postcode) {
-        getRepresentatives(req.query.postcode, function(repsObj) {
+        getLegislators(req.query.postcode, "getRepresentatives", function(repsObj) {
             res.jsonp(repsObj);
         });
     } else if (req.query.lat && req.query.lng) {
         latLngToPostcode(parseFloat(req.query.lat), parseFloat(req.query.lng), function(postcode) {
-            getRepresentatives(postcode, function(repsObj) {
+            getLegislators(postcode, "getRepresentatives", function(repsObj) {
                 res.jsonp(repsObj);
             });
         });
