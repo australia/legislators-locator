@@ -72,6 +72,7 @@ function getRepresentatives(postcode, callback) {
 
         legislators.forEach(function(rep) {
             repsObj[rep.member_id] = {
+                member_id: rep.member_id,
                 house: rep.house,
                 first_name: rep.first_name,
                 last_name: rep.last_name,
