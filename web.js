@@ -103,7 +103,22 @@ app.get('/', function(req, res) {
             res.jsonp(repsObj);
         });
     } else if (req.query.lat && req.query.lng) {
-        latLngToPostcode(parseFloat(req.query.lat), parseFloat(req.query.lng), function(postcode) {
+        var lat = parseFloat(req.query.lat);
+        var lng = parseFloat(req.query.lng);
+
+        if (lat > -10.41 || lat < -39.08 || lng < 113.09 || lng > 153.38) {
+            // res.jsonp({
+            //     error: 'not in australia'
+            // });
+
+            getLegislators(4121, 'getRepresentatives', function(repsObj) {
+                res.jsonp(repsObj);
+            });
+            return;
+        }
+
+
+        latLngToPostcode(lat, lng, function(postcode) {
             getLegislators(postcode, 'getRepresentatives', function(repsObj) {
                 res.jsonp(repsObj);
             });
