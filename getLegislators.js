@@ -6,6 +6,26 @@ var randomProperty = function(obj) {
     return obj[keys[keys.length * Math.random() << 0]];
 };
 
+function postcode_to_state(postcode) {
+    if ((postcode >= 2600 && postcode <= 2618) || (String(postcode).substring(0, 2) == '29')) {
+        return 'ACT';
+    } else if (String(postcode).charAt(0) == '2') {
+        return 'NSW';
+    } else if (String(postcode).charAt(0) == '3') {
+        return 'Victoria';
+    } else if (String(postcode).charAt(0) == '4') {
+        return 'Queensland';
+    } else if (String(postcode).charAt(0) == '5') {
+        return 'SA';
+    } else if (String(postcode).charAt(0) == '6') {
+        return 'WA';
+    } else if (String(postcode).charAt(0) == '7') {
+        return 'Tasmania';
+    } else if (String(postcode).charAt(0) == '8' || String(postcode).charAt(0) == '9') {
+        return 'NT';
+    }
+};
+
 function getLegislators(postcode, callback) {
     var legislatorsObject = {};
 
@@ -19,6 +39,7 @@ function getLegislators(postcode, callback) {
                 for (var i = 0; i <= (3 - Object.keys(legislatorsObject).length); i++) {
 
                     var randomSenator = randomProperty(senatorsObj);
+                    console.log(randomSenator);
                     legislatorsObject[randomSenator.member_id] = randomSenator;
 
                 };
@@ -33,7 +54,12 @@ function getLegislators(postcode, callback) {
 }
 
 function getSomeLegislators(postcode, type, callback) {
+    var openAusUrl = "http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&postcode=" + postcode;
     var repsObj = {};
+
+    if (type === 'getSenators') {
+        openAusUrl = "http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&state=" + postcode_to_state(postcode);
+    }
 
     // if (postcode in cachedLegislators) {
     //     console.log('using cached legislator data...');
@@ -41,7 +67,7 @@ function getSomeLegislators(postcode, type, callback) {
     //     return;
     // }
 
-    request.get("http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&postcode=" + postcode, function(response) {
+    request.get(openAusUrl, function(response) {
 
         if (JSON.parse(response.text).error === "Invalid postcode" || JSON.parse(response.text).error === "Unknown postcode") {
             callback(response.text);
@@ -86,7 +112,6 @@ function getSomeLegislators(postcode, type, callback) {
         });
 
         // cachedLegislators[postcode] = repsObj;
-        console.log('esle');
         callback(repsObj);
 
     });

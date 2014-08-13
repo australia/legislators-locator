@@ -3,7 +3,6 @@ var vincenty = require('node-vincenty');
 var csv = require('csv');
 var fs = require('fs');
 
-
 var getLegislators = require('./getLegislators');
 
 var app = express();
@@ -49,7 +48,7 @@ app.get('/', function(req, res) {
             //     error: 'not in australia'
             // });
 
-            getLegislators(4121, function(repsObj) {
+            getLegislators(4121, function(repsObj) { //test
                 res.jsonp(repsObj);
             });
             return;
@@ -69,10 +68,4 @@ app.listen(port, function() {
     console.log('Listening on ' + port);
 });
 
-
 // todo convert lat lng to postcode
-
-
-function isInAustralia(postcode, lat, lng) {
-
-}
