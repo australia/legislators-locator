@@ -3,7 +3,7 @@ var vincenty = require('node-vincenty');
 var csv = require('csv');
 var fs = require('fs');
 
-var getLegislators = require('./getLegislators');
+var findLegislators = require('./findLegislators');
 
 var app = express();
 
@@ -34,7 +34,7 @@ function latLngToPostcode(clientLat, clientLng, callback) {
 
 app.get('/', function(req, res) {
     if (req.query.postcode) {
-        getLegislators(req.query.postcode, function(repsObj) {
+        findLegislators(req.query.postcode, function(repsObj) {
             res.jsonp(repsObj);
             return;
         });
@@ -48,14 +48,14 @@ app.get('/', function(req, res) {
             //     error: 'not in australia'
             // });
 
-            getLegislators(4121, function(repsObj) { //test
+            findLegislators(4121, function(repsObj) { //test
                 res.jsonp(repsObj);
             });
             return;
         }
 
         latLngToPostcode(lat, lng, function(postcode) {
-            getLegislators(postcode, function(repsObj) {
+            findLegislators(postcode, function(repsObj) {
                 res.jsonp(repsObj);
                 return;
             });

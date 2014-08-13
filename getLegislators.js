@@ -26,7 +26,7 @@ function postcode_to_state(postcode) {
     }
 };
 
-function getLegislators(postcode, callback) {
+function fingLegislators(postcode, callback) {
     var legislatorsObject = {};
 
     getSomeLegislators(postcode, 'getRepresentatives', function(RepresentativesObj) {
@@ -53,7 +53,7 @@ function getLegislators(postcode, callback) {
     });
 }
 
-function getSomeLegislators(postcode, type, callback) {
+function getLegislators(postcode, type, callback) {
     var openAusUrl = "http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&postcode=" + postcode;
     var repsObj = {};
 
@@ -116,4 +116,4 @@ function getSomeLegislators(postcode, type, callback) {
 
     });
 }
-module.exports = getLegislators;
+module.exports = findLegislators;
