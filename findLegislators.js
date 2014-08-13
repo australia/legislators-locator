@@ -26,15 +26,15 @@ function postcode_to_state(postcode) {
     }
 };
 
-function fingLegislators(postcode, callback) {
+function findLegislators(postcode, callback) {
     var legislatorsObject = {};
 
-    getSomeLegislators(postcode, 'getRepresentatives', function(RepresentativesObj) {
+    getLegislators(postcode, 'getRepresentatives', function(RepresentativesObj) {
         legislatorsObject = RepresentativesObj;
 
         if (Object.keys(legislatorsObject).length < 3) {
 
-            getSomeLegislators(postcode, 'getSenators', function(senatorsObj) {
+            getLegislators(postcode, 'getSenators', function(senatorsObj) {
 
                 for (var i = 0; i <= (3 - Object.keys(legislatorsObject).length); i++) {
 
