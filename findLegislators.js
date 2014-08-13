@@ -24,7 +24,7 @@ function postcode_to_state(postcode) {
     } else if (String(postcode).charAt(0) == '8' || String(postcode).charAt(0) == '9') {
         return 'NT';
     }
-};
+}
 
 function findLegislators(postcode, callback) {
     var legislatorsObject = {};
