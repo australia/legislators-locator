@@ -60,8 +60,12 @@ app.get('/', function(req, res) {
                 return;
             });
         });
+    } else {
+        res.send('nothing');
     }
 });
+
+app.get('/count', require('./count'));
 
 var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
