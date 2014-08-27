@@ -1,4 +1,4 @@
-var contactInfo = require('./contactInfoByMemberId.json');
+var contactInfo = require('./lib/contactInfoByMemberId.json');
 
 module.exports = function(req, res){
 var email = 0;

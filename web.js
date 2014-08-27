@@ -3,8 +3,7 @@ var vincenty = require('node-vincenty');
 var csv = require('csv');
 var fs = require('fs');
 var latLngToPostcode = require('./lib/latLngToPostcode');
-
-var findLegislators = require('./findLegislators');
+var findLegislators = require('./lib/findLegislators');
 
 var app = express();
 
@@ -53,5 +52,3 @@ var port = Number(process.env.PORT || 5000);
 app.listen(port, function() {
     console.log('Listening on ' + port);
 });
-
-// todo convert lat lng to postcode
