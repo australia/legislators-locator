@@ -1,5 +1,6 @@
 var request = require('superagent');
 var openAusAPIKey = process.env.API;
+var contactInfo = require('./contactInfoByMemberId.json');
 
 var randomProperty = function(obj) {
     var keys = Object.keys(obj)
@@ -107,7 +108,8 @@ function getLegislators(postcode, type, callback) {
                 lastupdate: rep.lastupdate,
                 full_name: rep.full_name,
                 name: rep.name,
-                image: rep.image
+                image: rep.image,
+                contact_details: contactInfo[rep.member_id]
             }
         });
 
