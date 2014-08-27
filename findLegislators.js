@@ -2,6 +2,9 @@ var request = require('superagent');
 var openAusAPIKey = process.env.API;
 var contactInfo = require('./contactInfoByMemberId.json');
 
+var cachedSenators = {};
+var cachedRepresentatives = {};
+
 var randomProperty = function(obj) {
     var keys = Object.keys(obj)
     return obj[keys[keys.length * Math.random() << 0]];
@@ -34,19 +37,12 @@ function findLegislators(postcode, callback) {
         legislatorsObject = RepresentativesObj;
 
         if (Object.keys(legislatorsObject).length < 3) {
-
             getLegislators(postcode, 'getSenators', function(senatorsObj) {
-
                 for (var i = 0; i <= (3 - Object.keys(legislatorsObject).length); i++) {
-
                     var randomSenator = randomProperty(senatorsObj);
-                    console.log(randomSenator);
                     legislatorsObject[randomSenator.member_id] = randomSenator;
-
                 };
-
                 callback(legislatorsObject);
-
             });
         } else {
             callback(legislatorsObject);
@@ -54,19 +50,54 @@ function findLegislators(postcode, callback) {
     });
 }
 
-function getLegislators(postcode, type, callback) {
-    var openAusUrl = "http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&postcode=" + postcode;
+function formatLegislators(legislators){
     var repsObj = {};
+    legislators.forEach(function(rep) {
+            repsObj[rep.member_id] = {
+                member_id: rep.member_id,
+                house: rep.house,
+                first_name: rep.first_name,
+                last_name: rep.last_name,
+                constituency: rep.constituency,
+                party: rep.party,
+                entered_house: rep.entered_house,
+                left_house: rep.left_house,
+                entered_reason: rep.entered_reason,
+                left_reason: rep.left_reason,
+                person_id: rep.person_id,
+                title: rep.title,
+                lastupdate: rep.lastupdate,
+                full_name: rep.full_name,
+                name: rep.name,
+                image: rep.image,
+                contact_details: contactInfo[rep.member_id]
+            }
+        });
+    return repsObj;
+}
 
-    if (type === 'getSenators') {
-        openAusUrl = "http://www.openaustralia.org/api/" + type + "?key=" + openAusAPIKey + "&output=js&state=" + postcode_to_state(postcode);
+function getLegislators(postcode, type, callback) {
+    var openAusUrl = '';
+    
+    if (type === 'getRepresentatives' && postcode in cachedRepresentatives) {
+        console.log('using cached Representative data...');
+        callback(formatLegislators(cachedRepresentatives[postcode]));
+        return;
     }
 
-    // if (postcode in cachedLegislators) {
-    //     console.log('using cached legislator data...');
-    //     callback(cachedLegislators[postcode]);
-    //     return;
-    // }
+    if (type === 'getSenators' && postcode_to_state(postcode) in cachedSenators) {
+        console.log('using cachedSenators data...');
+        callback(formatLegislators(cachedSenators[postcode_to_state(postcode)]));
+        return;
+    }
+
+    if (type === 'getRepresentatives') {
+        openAusUrl = "http://www.openaustralia.org/api/getRepresentatives?key=" + openAusAPIKey + "&output=js&postcode=" + postcode;
+    }
+
+    if (type === 'getSenators') {
+        openAusUrl = "http://www.openaustralia.org/api/getSenators?key=" + openAusAPIKey + "&output=js&state=" + postcode_to_state(postcode);
+    }
 
     request.get(openAusUrl, function(response) {
 
@@ -91,31 +122,16 @@ function getLegislators(postcode, type, callback) {
             return;
         }
 
-        legislators.forEach(function(rep) {
-            repsObj[rep.member_id] = {
-                member_id: rep.member_id,
-                house: rep.house,
-                first_name: rep.first_name,
-                last_name: rep.last_name,
-                constituency: rep.constituency,
-                party: rep.party,
-                entered_house: rep.entered_house,
-                left_house: rep.left_house,
-                entered_reason: rep.entered_reason,
-                left_reason: rep.left_reason,
-                person_id: rep.person_id,
-                title: rep.title,
-                lastupdate: rep.lastupdate,
-                full_name: rep.full_name,
-                name: rep.name,
-                image: rep.image,
-                contact_details: contactInfo[rep.member_id]
-            }
-        });
+        if (type === 'getSenators') {
+        cachedSenators[postcode_to_state(postcode)] = legislators;
+        }
 
-        // cachedLegislators[postcode] = repsObj;
-        callback(repsObj);
+        if (type === 'getRepresentatives') {
+        cachedRepresentatives[postcode] = legislators;
+        }
 
+        callback(formatLegislators(legislators));
     });
 }
+
 module.exports = findLegislators;
