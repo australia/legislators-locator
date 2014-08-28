@@ -5,13 +5,8 @@ var fs = require('fs');
 var latLngToPostcode = require('./lib/latLngToPostcode');
 var findLegislators = require('./lib/findLegislators');
 
-var app = express();
-
 var cachedLegislators = {};
-
-var nearestData = {
-    distance: 99999999999999999999
-};
+var app = express();
 
 app.get('/', function(req, res) {
     if (req.query.postcode) {
