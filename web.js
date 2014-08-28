@@ -1,5 +1,5 @@
 var express = require('express');
-var vincenty = require('node-vincenty');
+
 var csv = require('csv');
 var fs = require('fs');
 var latLngToPostcode = require('./lib/latLngToPostcode');
