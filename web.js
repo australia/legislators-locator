@@ -1,6 +1,4 @@
 var express = require('express');
-
-
 var latLngToPostcode = require('./lib/latLngToPostcode');
 var findLegislators = require('./lib/findLegislators');
 
