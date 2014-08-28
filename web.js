@@ -1,7 +1,6 @@
 var express = require('express');
 
 var csv = require('csv');
-var fs = require('fs');
 var latLngToPostcode = require('./lib/latLngToPostcode');
 var findLegislators = require('./lib/findLegislators');
 
