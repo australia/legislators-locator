@@ -29,6 +29,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                     full_name: cells[2],
                     contact_page: cells[5],
                     email: cells[7],
+                    photo_url: cells[6],
                     facebook: cells[8],
                     twitter: cells[9],
                     website: cells[10]
@@ -38,6 +39,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                     full_name: cells[2],
                     contact_page: cells[5],
                     email: cells[7],
+                    photo_url: cells[6],
                     facebook: cells[8],
                     twitter: cells[9],
                     website: cells[10]
@@ -63,6 +65,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                     full_name: cells[2],
                     contact_page: cells[5],
                     email: cells[7],
+                    photo_url: cells[6],
                     facebook: cells[8],
                     twitter: cells[9],
                     website: cells[10]
@@ -71,6 +74,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                 newAusMpContacts[member_id] = {
                     full_name: cells[2],
                     contact_page: cells[5],
+                    photo_url: cells[6],
                     email: cells[7],
                     facebook: cells[8],
                     twitter: cells[9],
