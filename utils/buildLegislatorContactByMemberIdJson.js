@@ -23,8 +23,8 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
             // console.log(cell);
             if (typeof cell !== 'undefined' && (cell.indexOf(first_name) !== -1) && (cell.indexOf(last_name) !== -1)) {
 
-                console.log(member_id);
-                
+                //console.log(member_id);
+                /*
                 console.log({
                     full_name: cells[2],
                     contact_page: cells[5],
@@ -34,7 +34,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                     twitter: cells[9],
                     website: cells[10]
                 });
-                console.log('*********************************************', cells.length);
+                console.log('*********************************************', cells.length);*/
                 newAusMpContacts[member_id] = {
                     full_name: cells[2],
                     contact_page: cells[5],
@@ -46,6 +46,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                 };
                 foundMatch = true;
 
+            } else {
             }
         });
         if (!foundMatch && cells[0] !== 'representatives') {
@@ -59,8 +60,8 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
             // console.log(cell);
             if (typeof cell !== 'undefined' && (cell.indexOf(first_name) !== -1) && (cell.indexOf(last_name) !== -1)) {
 
-                console.log(member_id);
-                
+                //console.log(member_id);
+                /*
                 console.log({
                     full_name: cells[2],
                     contact_page: cells[5],
@@ -70,7 +71,7 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
                     twitter: cells[9],
                     website: cells[10]
                 });
-                console.log('*********************************************', cells.length);
+                console.log('*********************************************', cells.length);*/
                 newAusMpContacts[member_id] = {
                     full_name: cells[2],
                     contact_page: cells[5],
@@ -85,6 +86,11 @@ fs.readFile('./legislator_contacts_with_member_id.csv', function(err, data) {
             }
         });
         if (!foundMatch && cells[0] !== 'senate') {
+            // newAusMpContacts += rows[i] + ',' + null + '\n';
+        }
+
+        if (!foundMatch) {
+            console.log('who', rows[i]);
             // newAusMpContacts += rows[i] + ',' + null + '\n';
         }
     }
