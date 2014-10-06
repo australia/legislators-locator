@@ -17,13 +17,13 @@ app.get('/', function(req, res) {
         var lng = parseFloat(req.query.lng);
 
         if (lat > -10.41 || lat < -39.08 || lng < 113.09 || lng > 153.38) { // is in aus
-            // res.jsonp({
-            //     error: 'not in australia'
-            // });
+             res.jsonp({
+                 error: 'not-australia'
+             });
 
-            findLegislators(4121, function(repsObj) { //test
-                res.jsonp(repsObj);
-            });
+            //findLegislators(4121, function(repsObj) { //test
+            //    res.jsonp(repsObj);
+            //});
             return;
         }
 
